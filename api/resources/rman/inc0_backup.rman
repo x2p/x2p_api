@@ -1,0 +1,15 @@
+# This script perform a full hot backup of an oracle database.
+# Database must be available for this operation to succeed.
+SHOW ALL;
+
+# Backup the SPFILE and the CONTROLFILE
+BACKUP SPFILE INCLUDE CURRENT CONTROLFILE;
+
+# Backup the database. Thhe archived redo logs are included
+# in the backupset then deleted from disk to save space.
+BACKUP INCREMENTAL LEVEL 0 DATABASE PLUS ARCHIVELOG DELETE ALL INPUT;
+
+# Backup the SPFILE and the CONTROLFILE
+BACKUP SPFILE INCLUDE CURRENT CONTROLFILE;
+
+EXIT;

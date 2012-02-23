@@ -1,0 +1,83 @@
+#!/bin/ksh 
+# Copyright 2012 XPRESS2PEOPLE
+# File                   : aixcmd.lib
+# Created on             : 2012/02/23
+# Family                 : AIX
+# Purpose                : Custom functions for AIX OS.
+# Developpers            :
+#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
+#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
+# History                :
+#  2012/02/23 (J. Alarcon) Initial version from aixinf.lib.
+
+# 1) Function               : aix_chk_availablespace
+# 1) Purpose                : Verify that there is enough disk space in the specified directory.
+# 1) Notes                  : You must specify a size of space memory wanted either in MB or in %.
+# 1) Version                : 1.0
+# 1) Syntax                 : aix_chk_availablespace <directory> <memory space>
+# 1) Optionals Parameters   : Nothing
+# 1) Mandatories Parameters : <directory> and <memory space in MB or in %>
+# 1) Example 1              : aix_chk_availablespace /home/oracle 100MB
+# 1) Example 2              : aix_chk_availablespace /etc 20%
+# 1) Return                 : 0=Sufficient space, 1=Miss space or 2=No unity expressed for the size of space memory wanted.
+# 1) History                :
+#  2012/02/23 (J. Alarcon) Initial version.
+function aix_chk_availablespace
+{
+	# Variables affectation
+        dir=${1}
+        mem_wanted=${2}
+
+        # MB or %
+        if [[ ${mem_wanted} == *MB  ]]
+        then
+                # Check the memory in MB.
+                mem_free=$(df -m ${dir} | grep "/" | awk '{print $4}')
+
+                # Delete the "MB"
+                mem_wanted=$(expr ${mem_wanted} : "\(.*\)..$")
+
+                # Delete the decimal part of mem_free and mem_wanted
+                mem_free=$(echo $mem_free | awk -F ',' '{print $1}')
+                mem_wanted=$(echo $mem_wanted | awk -F ',' '{print $1}')
+		
+		# Is there enough disk space ? 
+		if [[ $mem_free -gt $mem_wanted ]]
+		then
+			# Yes 
+			return 0
+		else
+			# No
+			return 1
+		fi
+       else
+                # Memory space in %
+                if [[ ${mem_wanted} == *% ]]
+                then
+                        # Check the memory in %
+                        mem_used=$(df -m ${dir} | grep "/" | awk '{print $5}')
+
+                        # Delete the "%"
+                        mem_wanted=$(expr ${mem_wanted} : "\(.*\).$")
+                        mem_used=$(expr ${mem_used} : "\(.*\).$")
+                        
+			# Convert the used memory into free memory
+                        ((mem_free=100-mem_used))
+			
+			# Is there enough disk space
+			if [[ $mem_free -gt $mem_wanted ]]
+			then
+				# Yes 
+				return 0
+			else
+				# No
+				return 1
+			fi
+                else
+                        # No, so error
+                        return 2
+                fi
+        fi
+}
+# aix_chk_availablespace end
+
