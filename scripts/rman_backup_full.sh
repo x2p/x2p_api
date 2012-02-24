@@ -52,6 +52,7 @@ print_api_stdoutd "Verbose log 	: ${API_LOGPATH}/${API_VLOGFILE}"
 # Execute the clean_resources function to end the script properly when CTRL-C or TERM signal is trap
 trap "clean_resources 1" INT TERM 
 # Initialize the log engine
+# Note : The LOGPATH will be concatened to the LOGFILE into the LOGFILE variables
 init_api_logs
 print_api_logfile start
 
@@ -78,23 +79,18 @@ check_api_result $? "Available space check"
 
 # Executing backup script
 print_api_all "Executing backup script ${BACKUPSCRIPT}"
-#run_ora_rmanscript ${BACKUPSCRIPT} 		        		>>${API_VLOGFILE}
+run_ora_rmanscript ${BACKUPSCRIPT} 		        		>>${API_VLOGFILE}
 check_api_result $? "Backup script execution"
 
 # Crosscheck
 print_api_all "Performing crosscheck"        
 run_ora_rmanscript "crosscheck.rman"              			>>${API_VLOGFILE}
 check_api_result $? "Crosscheck operation" 
-exit
+
 # Delete Expired
 print_api_all "Deletion of EXPIRED backups and archivelogs" 
 run_ora_rmanscript "delete_expired.rman"               			>>${API_VLOGFILE}
 check_api_result $? "Deletion of EXPIRED backups and archivelogs"  
-
-# Delete Obsolete
-print_api_all "Deletion of OBSOLETE backups and archivelogs" 
-run_ora_rmanscript "delete_obsolete.rman"                               >>${API_VLOGFILE}
-check_api_result $? "Deletion of OBSOLETE backups and archivelogs"
 
 # Logging post-backup stats
 print_api_all "Logging post-backup system informations"   
@@ -102,8 +98,8 @@ df -k                                               			>>${API_VLOGFILE}	# FS Us
 check_api_result $? "Post-backup system informations records"  
 
 print_api_stdoutd "Script end."
-print_api_stdoutd "Log 		: ${API_LOGPATH}/${API_LOGFILE}"
-print_api_stdoutd "Verbose log 	: ${API_LOGPATH}/${API_VLOGFILE}"
+print_api_stdoutd "Log 		: ${API_LOGFILE}"
+print_api_stdoutd "Verbose log 	: ${API_VLOGFILE}"
 
 # Shut the log engine
 print_api_logfile end end 0

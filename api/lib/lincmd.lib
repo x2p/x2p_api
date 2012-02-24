@@ -32,14 +32,15 @@ function lin_chk_availablespace
         if [[ ${mem_wanted} == *MB  ]]
         then
                 # Check the memory in MB.
-                mem_free=$(df -m ${dir} | grep "/" | awk '{print $3}')
-                # Delete the "MB"
+                mem_free=$(df -m ${dir} | grep "%" | grep "/" | awk '{print $4}')
+                if [[ $mem_free == *% ]] ; then
+			mem_free=$(df -m ${dir} | grep "%" | grep "/" | awk '{print $3}')
+		fi
+		# Delete the "MB"
                 mem_wanted=$(expr ${mem_wanted} : "\(.*\)..$")
-
                 # Delete the decimal part of mem_free and mem_wanted
                 mem_free=$(echo $mem_free | awk -F ',' '{print $1}')
                 mem_wanted=$(echo $mem_wanted | awk -F ',' '{print $1}')
-		
 		# Is there enough disk space ? 
 		if [[ $mem_free -gt $mem_wanted ]]
 		then
@@ -54,11 +55,13 @@ function lin_chk_availablespace
                 if [[ ${mem_wanted} == *% ]]
                 then
                         # Check the memory in %
-                        mem_used=$(df -m ${dir} | grep "/" | awk '{print $4}')
-                        # Delete the "%"
+                        mem_used=$(df -m ${dir} | grep "%" | grep "/" | awk '{print $4}')
+			if [[ $mem_used != *% ]] ; then
+				mem_used=$(df -m ${dir} | grep "%" | grep "/" | awk '{print $5}')
+			fi
+			# Delete the "%"
                         mem_wanted=$(expr ${mem_wanted} : "\(.*\).$")
                         mem_used=$(expr ${mem_used} : "\(.*\).$")
-                        
 			# Convert the used memory into free memory
                         ((mem_free=100-mem_used))
 			
