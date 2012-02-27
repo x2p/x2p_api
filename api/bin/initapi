@@ -1,16 +1,6 @@
 #!/bin/ksh
-# Copyright 2010 XPRESS2PEOPLE
 # SYNTAXE : initapi [-l] [-c] [-v] [trigram's lib familly]
 # RETURN  : RC=0 : ok, RC <> 0 = error
-# Version 4.0.r110 07 september 2010 by S.OUELLET : handle the load from /usr/bin/initapi 
-#						    export APIHOME
-#						    load api lib and conf all the time
-#						    add the switch -d to not load by default the api lib and conf
-# Version 4.0.r90  26 august    2010 by S.OUELLET : bug fix. Dont try to load conf or lib when it doesnt exist.
-#						    Autoconfiguration feature
-# Version 4.0.r89  26 august    2010 by S.OUELLET : add : switch -f (do not load conf and load only lib) + message on load conf
-# Version 4.0.r88  26 august    2010 by S.OUELLET : add : automatic librairies loading and verbose mode
-# Version 4.0.r85  25 august    2010 by S.OUELLET : initial version
 
 ### PARAMETERS
 ##############

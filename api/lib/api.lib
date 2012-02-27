@@ -1,14 +1,8 @@
 #!/bin/ksh
-# Copyright 2012 XPRESS2PEOPLE
 # File                   : apicom.lib
 # Created on             : 2012/02/22   
 # Family                 : API
 # Purpose                : This file contains essentials functions for the API.
-# Developpers            :
-#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
-#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
-# History                :
-#  2012/02/22 (J. Alarcon) Initial version from old versin by B. Garcia and S. Ouellet.
 
 ## Variable declaration ##
 # Variable      : API_LOGDATEFORMAT
@@ -65,10 +59,6 @@ fi
 # 1) Mandatories Parameters : Nothing
 # 1) Example                : init_api_logs APPEND
 # 1) Return                 : -1 in case of error. 0 otherwise.
-# 1) History                :
-#   2009/07/16 (B. Garcia) Initial version from comlib.fnc by S. Ouellet.
-#   2011/02/25 (S. Ballaud) Modification about the name of the logfile et vlogfile
-#   2012/02/22 (J. Alarcon) APPEND mode added.
 init_api_logs() {
 # Uppercase variable declaration
 typeset -u log_mode
@@ -171,9 +161,6 @@ fi
 # 2) Mandatories Parameters : <string>
 # 2) Example                : print_api_stdoutd "Hello World"
 # 2) Return                 : Nothing expected.
-# 2) History                :
-#   2009/07/16 (B. Garcia) Initial version from comlib.fnc by S. Ouellet.
-#   2010/09/08 (S. Ballaud) Modification from comlib.fnc by S. Ouellet.
 print_api_stdoutd() {
  echo "############################################################"
  echo `date "+%F %T"`
@@ -192,9 +179,6 @@ print_api_stdoutd() {
 # 3) Example 1              : print_api_logfile start
 # 3) Example 2              : print_api_logfile err "File flushed" 1  
 # 3) Return                 : -1 in case of syntax error. 0 otherwise.
-# 3) History                :
-#   2009/07/16 (B. Garcia) Initial version from comlib.fnc by S. Ouellet.
-#   2009/08/19 (B. Garcia) Remove initlogs from p2l start. Be sur to call initlogs before using p2l.
 print_api_logfile() {
   case $1 in
     "start")
@@ -234,9 +218,6 @@ print_api_logfile() {
 # 4) Mandatories Parameters : <string> 
 # 4) Example                : print_api_dbg "Debug is set"
 # 4) Return                 : Nothing expected.
-# 4) History                :
-#   2009/07/16 (B. Garcia) Initial version.
-#   2010/09/08 (S. Ballaud) Modification about the test.
 print_api_dbg() {
   if [[ $API_DEBUG -eq 1 ]]; then
     echo $@
@@ -253,8 +234,6 @@ print_api_dbg() {
 # 5) Mandatories Parameters : <0 or 1> 
 # 5) Example                : set_api_dbg 1
 # 5) Return                 : 0=no debug, 1=debug or 2=error syntax
-# 5) History                :
-#   2010/09/08 (S. Ballaud) Initial version.
 function set_api_dbg
 {
 	# Is there an argument ?
@@ -293,9 +272,6 @@ function set_api_dbg
 # 6) Mandatories Parameters : <rc : Value to check (0=success, otherwise warning)> and <steplevel : Step of the main program (Will appears in the profile)> 
 # 6) Example                : check_api_result 0 1 
 # 6) Return                 : -1 in case of syntax error. 0 otherwise.
-# 6) History                :
-#   2009/07/16 (B. Garcia) Initial version from comlib.fnc by S. Ouellet.
-#   2011/11/23 (S. Ouellet) bug fixed (exit $1 instead exit $2)
 check_api_result() {
   if [[ ${1} -eq 0 ]]; then
     print_api_logfile log "${2}"
@@ -316,9 +292,6 @@ check_api_result() {
 # 7) Example 1              : hapi -l
 # 7) Example 2              : hapi apicom init_api_logs
 # 7) Return                 : Informations about a library or a function. 
-# 7) History                :
-#   2010/03/21 (S.Ballaud) Initial version.
-
 # Affiche un menu d'aide
 function help
 {
@@ -615,8 +588,6 @@ function hapi
 # 8) Mandatories Parameters : Nothing
 # 8) Example                : get_api_chksum
 # 8) Return                 : 0=success or !0=failed
-# 8) History                :
-#  2010/10/27 (S. Ballaud) Initial version.
 function get_api_chksum
 {
 	# Est ce qu'un fichier refsumtab ?
@@ -746,8 +717,6 @@ function get_api_chksum
 # 9) Mandatories Parameters : Nothing
 # 9) Example                : verify_api_chksum
 # 9) Return                 : 0=success or !0=failed
-# 9) History                :
-#  2010/10/27 (S. Ballaud) Initial version.
 function verify_api_chksum
 {
 	# Declaration de variable
@@ -791,8 +760,6 @@ function verify_api_chksum
 # 10) Syntax			: clean_resources <end code>
 # 10) Mandatory parameters	: <end code> : Generally numeric error code
 # 10) Example			: clean_resources 1
-# 10) History
-#	2012/02/23 (B. Garcia) Initial version 
 function clean_resources {
  print_api_logfile end Aborted ${1}
  exit ${1}
@@ -804,8 +771,7 @@ function clean_resources {
 # 11) Syntax                    : print_api_all <message>
 # 11) Mandatory parameters      : <message> : Message to display
 # 11) Example                   : print_api_all "This is it." 
-# 11) History
-#       2012/02/23 (J. Alarcon) Initial version
 function print_api_all {
 	print_api_stdoutd $* | tee -a ${API_VLOGFILE} 
 }
+

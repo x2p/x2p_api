@@ -1,14 +1,8 @@
 #!/bin/ksh 
-# Copyright 2012 XPRESS2PEOPLE
 # File                   : oscmd.lib
 # Created on             : 2012/02/22
 # Family                 : OS 
 # Purpose                : This file contains essentials generic functions to get informations about the state of the system.
-# Developpers            :
-#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
-#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
-# History                :
-#  2012/02/22 (J. Alarcon) Initial version.
 
 # 1) Function               : load_custom_oslib 
 # 1) Purpose                : Load the library containing custom functions depending of the current OS.
@@ -19,8 +13,6 @@
 # 1) Mandatories Parameters : Nothing
 # 1) Example 1              : load_custom_oslib 
 # 1) Return                 : 0=Library loaded, 1=No library for $API_OS, otherwise return code of initapi.
-# 1) History                :
-#  2012/02/23 (J. Alarcon) Initial version.
 function load_custom_oslib {
 case ${API_OS} in
 	"aix")
@@ -48,8 +40,6 @@ return $?
 # 2) Example 1              : chk_availablespace /home/oracle 100MB
 # 2) Example 2              : chk_availablespace /etc 20%
 # 2) Return                 : 0=Sufficient space, 1=Miss space, 2=No unity expressed for the size of space memory wanted or 3=No existing function for OS.
-# 2) History                :
-#  2012/02/22 (J. Alarcon) Initial version.
 function chk_availablespace {
 	case ${API_OS} in
 		"aix")

@@ -1,14 +1,8 @@
 #!/bin/ksh 
-# Copyright 2012 XPRESS2PEOPLE
 # File                   : aixcmd.lib
 # Created on             : 2012/02/23
 # Family                 : AIX
 # Purpose                : Custom functions for AIX OS.
-# Developpers            :
-#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
-#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
-# History                :
-#  2012/02/23 (J. Alarcon) Initial version from aixinf.lib.
 
 # 1) Function               : aix_chk_availablespace
 # 1) Purpose                : Verify that there is enough disk space in the specified directory.
@@ -20,8 +14,6 @@
 # 1) Example 1              : aix_chk_availablespace /home/oracle 100MB
 # 1) Example 2              : aix_chk_availablespace /etc 20%
 # 1) Return                 : 0=Sufficient space, 1=Miss space or 2=No unity expressed for the size of space memory wanted.
-# 1) History                :
-#  2012/02/23 (J. Alarcon) Initial version.
 function aix_chk_availablespace
 {
 	# Variables affectation
