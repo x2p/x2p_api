@@ -7,11 +7,6 @@
 #   <archivelog_path>   : Path of the archivelogs to check the size.
 #   <size>		: Minimum size in the backup directory we need to perform the backup (if no specified, it's 20%)
 #   <archivelog_size>	: If the size of the archivelogs directory exceeeds this size,the backup will be launched (if no specified, it's 10%).  
-# History       	:
-#  2012/02/22 (J. Alarcon) Initial version from archivelog_backup.sh
-# Developpers   	:
-#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
-#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
 
 # Check the parameters
 if [[ $# < 2 ]] ; then
@@ -72,6 +67,8 @@ if [[ "$?" == "0" ]] ; then
         # Enough disk space, we don't backup and leave the script
 	print_api_all "Enough space in $archivelog_path"
 	print_api_all "End of the script."	
+	# Shut the log engine
+	print_api_logfile end end 0
 	exit 0
 else
 	# Not enough disk space, we'll perform the backup of archivelogs

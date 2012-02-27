@@ -5,11 +5,6 @@
 # Syntax        : rman_backup_full.sh <sid> <size>
 #   <sid>       : SID of the database to backup
 #   <size>	: Minimum size in the backup directory we need to perform the backup (if no specified, it's 20%)
-# History       :
-#  2012/02/22 (J. Alarcon) Initial version from ora_backup.sh by B. Garcia
-# Developpers   :
-#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
-#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
 
 # Check the parameters
 if [[ $# < 1 ]] ; then
