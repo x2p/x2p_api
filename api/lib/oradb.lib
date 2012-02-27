@@ -4,11 +4,6 @@
 # Created on             : 2012/02/22
 # Family                 : ORACLE
 # Purpose 1              : This file contains essentials functions for the interraction with Oracle databases.
-# Developpers            :
-#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
-#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
-# History                :
-#  2012/02/22 (J. Alarcon) Initial version from old versin by B. Garcia and S. Ouellet.
 #######
 
 ## Variable declaration ##
@@ -74,16 +69,35 @@ EOS
 }
 # run_ora_sqlscript end
 
-# 3) Function               : run_ora_sqldba
-# 3) Purpose                : run an sql query as sysdba.
+# 3) Function               : run_ora_script
+# 3) Purpose                : run an sql script.
 # 3) Notes                  : ORACLE_HOME & ORACLE_SID must be set.
 # 3) Version                : 1.0
-# 3) Syntax                 : run_ora_sqldba <sql_query>
+# 3) Syntax                 : run_ora_script <script>
 # 3) Optionals Parameters   : Nothing
-# 3) Mandatories Parameters : <sql_query>
-# 3) Example                : run_ora_sqldba "SELECT * FROM matable"
+# 3) Mandatories Parameters : <script>
+# 3) Example                : run_ora_script "/home/oracle/start_db.sql"
 # 3) Return                 : 0 if the query succeed; sqlplus return code otherwise.
 # 3) History                :
+#   2012/02/27 (J. Alarcon) Initial version.
+run_ora_script() {
+  ${ORACLE_HOME}/bin/sqlplus -S /nolog<<EOS
+@${1};
+EOS
+  return $?
+}
+# run_ora_script end
+
+# 4) Function               : run_ora_sqldba
+# 4) Purpose                : run an sql query as sysdba.
+# 4) Notes                  : ORACLE_HOME & ORACLE_SID must be set.
+# 4) Version                : 1.0
+# 4) Syntax                 : run_ora_sqldba <sql_query>
+# 4) Optionals Parameters   : Nothing
+# 4) Mandatories Parameters : <sql_query>
+# 4) Example                : run_ora_sqldba "SELECT * FROM matable"
+# 4) Return                 : 0 if the query succeed; sqlplus return code otherwise.
+# 4) History                :
 #   2009/07/16 (B. Garcia) Initial version from oracomlib.fnc by S. Ouellet.
 run_ora_sqldba() {
   ${ORACLE_HOME}/bin/sqlplus -S /nolog<<EOS
@@ -102,16 +116,16 @@ EOS
 }
 # run_ora_sqlscriptdba end
 
-# 4) Function               : get_ora_oh
-# 4) Purpose                : Get the Oracle Home from the /etc/oratab from the /etc/oratab
-# 4) Notes                  :
-# 4) Version                : 1.0
-# 4) Syntax                 : get_ora_oh [SID]
-# 4) Optionals Parameters   : [SID]
-# 4) Mandatories Parameters : None
-# 4) Example                : get_ora_oh
-# 4) Return                 : 0=ok,1=/etc/oratab file not found
-# 4) History                :
+# 5) Function               : get_ora_oh
+# 5) Purpose                : Get the Oracle Home from the /etc/oratab from the /etc/oratab
+# 5) Notes                  :
+# 5) Version                : 1.0
+# 5) Syntax                 : get_ora_oh [SID]
+# 5) Optionals Parameters   : [SID]
+# 5) Mandatories Parameters : None
+# 5) Example                : get_ora_oh
+# 5) Return                 : 0=ok,1=/etc/oratab file not found
+# 5) History                :
 #   2010/10/18 (S. Ouellet) Initial version by S. Ouellet.
 get_ora_oh() {
  if [[ -f /etc/oratab ]]
@@ -130,16 +144,16 @@ get_ora_oh() {
 }
 # get_ora_oh end
 
-# 5) Function               : get_ora_activesidlist
-# 5) Purpose                : List only active SID from the /etc/oratab
-# 5) Notes                  :
-# 5) Version                : 1.0
-# 5) Syntax                 : get_ora_activesidlist
-# 5) Optionals Parameters   : None
-# 5) Mandatories Parameters : None
-# 5) Example                : get_ora_activesidlist
-# 5) Return                 : 0=ok,1=/etc/oratab file not found
-# 5) History                :
+# 6) Function               : get_ora_activesidlist
+# 6) Purpose                : List only active SID from the /etc/oratab
+# 6) Notes                  :
+# 6) Version                : 1.0
+# 6) Syntax                 : get_ora_activesidlist
+# 6) Optionals Parameters   : None
+# 6) Mandatories Parameters : None
+# 6) Example                : get_ora_activesidlist
+# 6) Return                 : 0=ok,1=/etc/oratab file not found
+# 6) History                :
 #   2010/10/18 (S. Ouellet) Initial version by S. Ouellet.
 get_ora_activesidlist() {
  if [[ -f /etc/oratab ]]
@@ -158,6 +172,67 @@ get_ora_activesidlist() {
  fi
 }
 # get_ora_activesidlist end
+
+# 7) Function               : start_ora_listener
+# 7) Purpose                : Start the Oracle listener
+# 7) Notes                  : the variable LISTENER_HOME from oracle.conf must be set correctly. If not, the first oh entry from the oratab will be use.
+# 7) Version                : 1.0
+# 7) Syntax                 : start_ora_listener
+# 7) Optionals Parameters   : Nothing
+# 7) Mandatories Parameters : Nothing
+# 7) Example                : start_ora_listener
+# 7) Return                 : 1 in case of error. 0 for a successfull start.
+start_ora_listener() {
+ if [[ -z $LISTENER_HOME ]]
+ then # LISTENER_HOME is not set, set the default
+  LISTENER_HOME=$(get_ora_oh `get_ora_activesidlist | head -1`)
+ fi
+ export ORACLE_HOME=${LISTENER_HOME}
+ ${ORACLE_HOME}/bin/lsnrctl start
+ return $?
+}
+# start_ora_listener end
+
+# 8) Function               : stop_ora_listener
+# 8) Purpose                : Stop the Oracle listener
+# 8) Notes                  : the variable LISTENER_HOME from oracle.conf must be set correctly. If not, the first oh entry from the oratab will be use.
+# 8) Version                : 1.0
+# 8) Syntax                 : stop_ora_listener
+# 8) Optionals Parameters   : Nothing
+# 8) Mandatories Parameters : Nothing
+# 8) Example                : stop_ora_listener
+# 8) Return                 : 1 in case of error. 0 for a successfull start.
+stop_ora_listener() {
+ if [[ -z $LISTENER_HOME ]]
+ then # LISTENER_HOME is not set, set the default
+  LISTENER_HOME=$(get_ora_oh `get_ora_activesidlist | head -1`)
+ fi
+ export ORACLE_HOME=${LISTENER_HOME}
+ ${ORACLE_HOME}/bin/lsnrctl stop
+ return $?
+}
+# stop_ora_listener end
+
+# 9) Function               : ctl_ora_agent
+# 9) Purpose                : Control the Oracle agent. start, stop, etc..
+# 9) Notes                  : the variable AGENT_HOME from oracle.conf must be set correctly. If not, the first oh entry from the oratab will be use.
+# 9) Version                : 1.0
+# 9) Syntax                 : ctl_ora_agent <action>
+# 9) Optionals Parameters   : Nothing
+# 9) Mandatories Parameters : <action>
+# 9) Example 1              : ctl_ora_agent start
+# 9) Example 2              : ctl_ora_agent stop
+# 9) Return                 : 1 in case of error. 0 for a successfull start.
+ctl_ora_agent() {
+ if [[ -z $AGENT_HOME ]]
+ then # LISTENER_HOME is not set, set the default
+  LISTENER_HOME=$(get_ora_oh `get_ora_activesidlist | head -1`)
+ fi
+ export ORACLE_HOME=${AGENT_HOME}
+ ${ORACLE_HOME}/bin/emctl ${1} agent
+ return $?
+}
+# ctl_ora_agent end
 
 ## BACKUP FUNCTIONS ##
 
