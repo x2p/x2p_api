@@ -1,4 +1,5 @@
 #!/bin/ksh
+# Copyright 2012 XPRESS2PEOPLE
 # File                   : oradb.lib
 # Created on             : 2012/02/22
 # Family                 : ORACLE
@@ -27,6 +28,8 @@ fi
 # 1) Mandatories Parameters : <SID : System ID>
 # 1) Example                : set_ora_env 18
 # 1) Return                 : 1 in case of error. 0 otherwise.
+# 1) History                :
+#   2009/07/16 (B. Garcia) Initial version from oracomlib.fnc by S. Ouellet.
 set_ora_env() {
   typeset -u $1 # SET SID IN UPPERCASE
   if [[ `egrep -i "^${1}:" /etc/oratab | wc -l` -ne 1 ]]
@@ -47,6 +50,8 @@ set_ora_env() {
 # 2) Mandatories Parameters : <user> <password> and <sql_query>
 # 2) Example                : run_ora_sqlscript root admin "SELECT * FROM matable"
 # 2) Return                 : 0 if the query succeed; sqlplus return code otherwise.
+# 2) History                :
+#   2009/07/16 (B. Garcia) Initial version from oracomlib.fnc by S. Ouellet.
 run_ora_sql() {
   ${ORACLE_HOME}/bin/sqlplus -S /nolog<<EOS
 connect ${1}/${2}
@@ -73,6 +78,8 @@ EOS
 # 3) Mandatories Parameters : <script>
 # 3) Example                : run_ora_script "/home/oracle/start_db.sql"
 # 3) Return                 : 0 if the query succeed; sqlplus return code otherwise.
+# 3) History                :
+#   2012/02/27 (J. Alarcon) Initial version.
 run_ora_script() {
   ${ORACLE_HOME}/bin/sqlplus -S /nolog<<EOS
 @${1};
@@ -90,6 +97,8 @@ EOS
 # 4) Mandatories Parameters : <sql_query>
 # 4) Example                : run_ora_sqldba "SELECT * FROM matable"
 # 4) Return                 : 0 if the query succeed; sqlplus return code otherwise.
+# 4) History                :
+#   2009/07/16 (B. Garcia) Initial version from oracomlib.fnc by S. Ouellet.
 run_ora_sqldba() {
   ${ORACLE_HOME}/bin/sqlplus -S /nolog<<EOS
 connect / as sysdba
@@ -116,6 +125,8 @@ EOS
 # 5) Mandatories Parameters : None
 # 5) Example                : get_ora_oh
 # 5) Return                 : 0=ok,1=/etc/oratab file not found
+# 5) History                :
+#   2010/10/18 (S. Ouellet) Initial version by S. Ouellet.
 get_ora_oh() {
  if [[ -f /etc/oratab ]]
  then
@@ -142,6 +153,8 @@ get_ora_oh() {
 # 6) Mandatories Parameters : None
 # 6) Example                : get_ora_activesidlist
 # 6) Return                 : 0=ok,1=/etc/oratab file not found
+# 6) History                :
+#   2010/10/18 (S. Ouellet) Initial version by S. Ouellet.
 get_ora_activesidlist() {
  if [[ -f /etc/oratab ]]
  then
@@ -223,15 +236,17 @@ ctl_ora_agent() {
 
 ## BACKUP FUNCTIONS ##
 
-# 6) Function               : run_ora_rmanscript
-# 6) Purpose                : run an rman script.
-# 6) Notes                  : ORACLE_HOME & ORACLE_SID must be set. User must be member of the dba group.The file ${APIHOME}/conf/connect_catalog.conf must exists and be completed if USE_RMAN_CATALOG is YES.
-# 6) Version                : 1.0
-# 6) Syntax                 : run_ora_rmanscript <script>
-# 6) Optionals Parameters   : Nothing
-# 6) Mandatories Parameters : <script>
-# 6) Example                : run_ora_rmanscript script.rman
-# 6) Return                 : 0 if the query succeed; rman return code otherwise.
+# 10) Function               : run_ora_rmanscript
+# 10) Purpose                : run an rman script.
+# 10) Notes                  : ORACLE_HOME & ORACLE_SID must be set. User must be member of the dba group.The file ${APIHOME}/conf/connect_catalog.conf must exists and be completed if USE_RMAN_CATALOG is YES.
+# 10) Version                : 1.0
+# 10) Syntax                 : run_ora_rmanscript <script>
+# 10) Optionals Parameters   : Nothing
+# 10) Mandatories Parameters : <script>
+# 10) Example                : run_ora_rmanscript script.rman
+# 10) Return                 : 0 if the query succeed; rman return code otherwise.
+# 10) History                :
+#   2012/02/22 (J. Alarcon) New version from orabck.lib. 
 run_ora_rmanscript() {
   if [[ -z $1 ]]; then    # check if argument has been given.
     print_api_stdoutd "Error: Bad usage of run_ora_rmanscript (no script given)"
@@ -261,15 +276,17 @@ EOS
 }
 # run_ora_rmanscript end
 
-# 7) Function               : get_rman_backuppath 
-# 7) Purpose                : Get the main rman backup path from RMAN configuration and set the BACKUP_PATH variable.
-# 7) Notes                  : ORACLE_HOME & ORACLE_SID must be set. User must be member of the dba group. The file ${APIHOME}/conf/connect_catalog.conf must exists and be completed if USE_RMAN_CATALOG is YES.
-# 7) Version                : 1.0
-# 7) Syntax                 : get_rman_backuppath 
-# 7) Optionals Parameters   : Nothing
-# 7) Mandatories Parameters : Nothing 
-# 7) Example                : get_rman_backuppath
-# 7) Return                 : 0 if the query succeed; rman return code otherwise.
+# 11) Function               : get_rman_backuppath 
+# 11) Purpose                : Get the main rman backup path from RMAN configuration and set the BACKUP_PATH variable.
+# 11) Notes                  : ORACLE_HOME & ORACLE_SID must be set. User must be member of the dba group. The file ${APIHOME}/conf/connect_catalog.conf must exists and be completed if USE_RMAN_CATALOG is YES.
+# 11) Version                : 1.0
+# 11) Syntax                 : get_rman_backuppath 
+# 11) Optionals Parameters   : Nothing
+# 11) Mandatories Parameters : Nothing 
+# 11) Example                : get_rman_backuppath
+# 11) Return                 : 0 if the query succeed; rman return code otherwise.
+# 11) History                :
+#   2011/11/28 (J. Alarcon) Initial version.
 get_rman_backuppath() {
       
       # RMAN Query
@@ -316,17 +333,19 @@ EOS`
       return $?
 }
 
-# 8) Function               : export_datapump 
-# 8) Purpose                : Make an oracle datapump export according to the parameters.
-# 8) Notes                  : ORACLE_HOME & ORACLE_SID must be set. User must be member of the dba group.
-# 8) Version                : 1.0
-# 8) Syntax                 : export_datapump <type> <name[,name][...]> 
-# 8) Optionals Parameters   : Nothing
-# 8) Mandatories Parameters : <type> (FULL | TABLESPACE | SCHEMA) <name> 
-# 8) Example 1              : export_datapump "SCHEMA" "USERS,TEST"
-# 8) Example 2		     : export_datapump "TABLESPACE" "SYSTEM"
-# 8) Example 3		     : export_datapump "FULL"
-# 8) Return                 : 0 if the query succeed; sqlplus return code otherwise.
+# 12) Function               : export_datapump 
+# 12) Purpose                : Make an oracle datapump export according to the parameters.
+# 12) Notes                  : ORACLE_HOME & ORACLE_SID must be set. User must be member of the dba group.
+# 12) Version                : 1.0
+# 12) Syntax                 : export_datapump <type> <name[,name][...]> 
+# 12) Optionals Parameters   : Nothing
+# 12) Mandatories Parameters : <type> (FULL | TABLESPACE | SCHEMA) <name> 
+# 12) Example 1              : export_datapump "SCHEMA" "USERS,TEST"
+# 12) Example 2		     : export_datapump "TABLESPACE" "SYSTEM"
+# 12) Example 3		     : export_datapump "FULL"
+# 12) Return                 : 0 if the query succeed; sqlplus return code otherwise.
+# 12) History                :
+#   2011/12/04 (J. Alarcon) Initial version.
 export_datapump() {
     # Upper case
     typeset -u dp_type

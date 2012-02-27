@@ -1,8 +1,14 @@
 #!/bin/ksh 
+# Copyright 2012 XPRESS2PEOPLE
 # File                   : aixcmd.lib
 # Created on             : 2012/02/23
 # Family                 : AIX
 # Purpose                : Custom functions for AIX OS.
+# Developpers            :
+#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
+#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
+# History                :
+#  2012/02/23 (J. Alarcon) Initial version from aixinf.lib.
 
 # 1) Function               : aix_chk_availablespace
 # 1) Purpose                : Verify that there is enough disk space in the specified directory.
@@ -14,6 +20,8 @@
 # 1) Example 1              : aix_chk_availablespace /home/oracle 100MB
 # 1) Example 2              : aix_chk_availablespace /etc 20%
 # 1) Return                 : 0=Sufficient space, 1=Miss space or 2=No unity expressed for the size of space memory wanted.
+# 1) History                :
+#  2012/02/23 (J. Alarcon) Initial version.
 function aix_chk_availablespace
 {
 	# Variables affectation
@@ -73,27 +81,19 @@ function aix_chk_availablespace
 }
 # aix_chk_availablespace end
 
-# 3) Function               : aix_fs_mount
-# 3) Purpose                : Mount a file system.
-# 3) Notes                  : Mount point must exist.
-# 3) Version                : 1.0
-# 3) Syntax                 : aix_fs_mount <device> <mount point>
-# 3) Optionals Parameters   : Nothing
-# 3) Mandatories Parameters : <device> and <mount point>
-# 3) Example 1              : aix_fs_mount /dev/cdrom /mnt
-# 3) Example 2              : aix_fs_mount nfsserver:/exported/path /mnt
-# 3) Return                 : -1=trying to mount on /, 0=fs mounted, 1=Device doesn't exist, 2=mount point doesn't exist or 3=No existing function for OS.
-function aix_fs_mount {
-	if [[ ! -e $1 ]]; then
-		return 1
-	fi
-	if [[ ! -d $2 ]]; then
-		return 2
-	fi
-	if [[ '/' = $2 ]]; then
-		return -1
-	fi
-	mount $1 $2
-	return $?
+
+# 4) Function               : aix_ctl_service
+# 4) Purpose                : Perform an action (start, stop, status) for a specific service.
+# 4) Version                : 1.0
+# 4) Syntax                 : aix_ctl_service <service> <action>
+# 4) Notes                  : Need to be root.
+# 4) Optionals Parameters   : Nothing
+# 4) Mandatories Parameters : <service> (name of the service) and <action> [stop|start|status]
+# 4) Example 1              : aix_ctl_service sshd status
+# 4) History                :
+#  2012/02/27 (J. Alarcon) Initial version.
+function aix_ctl_service {
+	# lssrc / startsrc / stopsrc ( / srcmstr == system resource master)
+        return $?
 }
-# aix_fs_mount end
+# aix_ctl_service end

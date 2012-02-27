@@ -1,8 +1,14 @@
 #!/bin/ksh 
+# Copyright 2012 XPRESS2PEOPLE
 # File                   : oscmd.lib
 # Created on             : 2012/02/22
 # Family                 : OS 
 # Purpose                : This file contains essentials generic functions to get informations about the state of the system.
+# Developpers            :
+#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
+#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
+# History                :
+#  2012/02/22 (J. Alarcon) Initial version.
 
 # 1) Function               : load_custom_oslib 
 # 1) Purpose                : Load the library containing custom functions depending of the current OS.
@@ -13,6 +19,8 @@
 # 1) Mandatories Parameters : Nothing
 # 1) Example 1              : load_custom_oslib 
 # 1) Return                 : 0=Library loaded, 1=No library for $API_OS, otherwise return code of initapi.
+# 1) History                :
+#  2012/02/23 (J. Alarcon) Initial version.
 function load_custom_oslib {
 case ${API_OS} in
 	"aix")
@@ -40,6 +48,8 @@ return $?
 # 2) Example 1              : chk_availablespace /home/oracle 100MB
 # 2) Example 2              : chk_availablespace /etc 20%
 # 2) Return                 : 0=Sufficient space, 1=Miss space, 2=No unity expressed for the size of space memory wanted or 3=No existing function for OS.
+# 2) History                :
+#  2012/02/22 (J. Alarcon) Initial version.
 function chk_availablespace {
 	case ${API_OS} in
 		"aix")
@@ -57,32 +67,32 @@ function chk_availablespace {
 }
 # chk_availablespace end
 
-# 3) Function               : fs_mount
-# 3) Purpose                : Mount a file system.
-# 3) Notes                  : Mount point must exist.
-# 3) Version                : 1.0
-# 3) Syntax                 : fs_mount <device> <mount point>
-# 3) Optionals Parameters   : Nothing
-# 3) Mandatories Parameters : <device> and <mount point>
-# 3) Example 1              : fs_mount /dev/cdrom /mnt
-# 3) Example 2              : fs_mount nfsserver:/exported/path /mnt
-# 3) Return                 : -1= trying to mount on /, 0=fs mounted, 1=Device doesn't exist, 2=mount point doesn't exist or 3=No existing function for OS.
-function fs_mount {
+# 4) Function               : ctl_service
+# 4) Purpose                : Perform an action (start, stop, status) for a specific service.
+# 4) Version                : 1.0
+# 4) Syntax                 : ctl_service <service> <action>
+# 4) Notes                  : Need to be root.
+# 4) Optionals Parameters   : Nothing
+# 4) Mandatories Parameters : <service> (name of the service) and <action> [stop|start|status]
+# 4) Example 1              : ctl_service sshd status
+# 4) History                :
+#  2012/02/27 (J. Alarcon) Initial version.
+function ctl_service {
 	case ${API_OS} in
-		"aix")
-			aix_fs_mount "$*"
-			;;
-		"linux")
-			lin_fs_mount "$*"
-			;;
-		*)
-			echo "Error: Function fs_mount not existing for OS: ${API_OS}."
-			return 3
-			;;
-	esac
-	return $?
+                "aix")
+                        echo "Error, aix_ctl_service doesn't exist."
+                        ;;
+                "linux")
+                        lin_ctl_service "$1" "$2"
+                        ;;
+                *)
+                        echo "Error, function ctl_service not existing for OS : ${API_OS}."
+                        return 3
+                        ;;
+        esac
+        return $?
 }
-# fs_mount end
+# ctl_service end
 
 # Include the current OS library
 load_custom_oslib

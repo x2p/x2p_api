@@ -1,8 +1,14 @@
 #!/bin/ksh 
+# Copyright 2012 XPRESS2PEOPLE
 # File                   : lincmd.lib
 # Created on             : 2012/02/23
 # Family                 : LIN
 # Purpose                : Custom functions for LINUX OS.
+# Developpers            :
+#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
+#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
+# History                :
+#  2012/02/23 (J. Alarcon) Initial version from aixinf.lib.
 
 # 1) Function               : lin_chk_availablespace
 # 1) Purpose                : Verify that there is enough disk space in the specified directory.
@@ -14,6 +20,8 @@
 # 1) Example 1              : lin_chk_availablespace /home/oracle 100MB
 # 1) Example 2              : lin_chk_availablespace /etc 20%
 # 1) Return                 : 0=Sufficient space, 1=Miss space or 2=No unity expressed for the size of space memory wanted.
+# 1) History                :
+#  2012/02/23 (J. Alarcon) Initial version.
 function lin_chk_availablespace
 {
 	# Variables affectation
@@ -74,27 +82,19 @@ function lin_chk_availablespace
 }
 # lin_chk_availablespace end
 
-# 3) Function               : lin_fs_mount
-# 3) Purpose                : Mount a file system.
-# 3) Notes                  : Mount point must exist.
-# 3) Version                : 1.0
-# 3) Syntax                 : lin_fs_mount <device> <mount point>
-# 3) Optionals Parameters   : Nothing
-# 3) Mandatories Parameters : <device> and <mount point>
-# 3) Example 1              : lin_fs_mount /dev/cdrom /mnt
-# 3) Example 2              : lin_fs_mount nfsserver:/exported/path /mnt
-# 3) Return                 : -1=trying to mount on /, 0=fs mounted, 1=Device doesn't exist, 2=mount point doesn't exist or 3=No existing function for OS.
-function lin_fs_mount {
-	if [[ ! -e $1 ]]; then
-		return 1
-	fi
-	if [[ ! -d $2 ]]; then
-		return 2
-	fi
-	if [[ '/' = $2 ]]; then
-		return -1
-	fi
-	mount $1 $2
-	return $?
+# 4) Function               : lin_ctl_service
+# 4) Purpose                : Perform an action (start, stop, status) for a specific service.
+# 4) Version                : 1.0
+# 4) Syntax                 : lin_ctl_service <service> <action>
+# 4) Notes		    : Need to be root.
+# 4) Optionals Parameters   : Nothing
+# 4) Mandatories Parameters : <service> (name of the service) and <action> [stop|start|status]
+# 4) Example 1              : lin_ctl_service sshd status
+# 4) History                :
+#  2012/02/27 (J. Alarcon) Initial version.
+function lin_ctl_service {
+	/etc/init.d/${1} ${2}
+
+        return $?
 }
-# lin_fs_mount end 
+# lin_ctl_service end
