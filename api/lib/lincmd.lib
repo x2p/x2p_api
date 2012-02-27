@@ -74,3 +74,27 @@ function lin_chk_availablespace
 }
 # lin_chk_availablespace end
 
+# 3) Function               : lin_fs_mount
+# 3) Purpose                : Mount a file system.
+# 3) Notes                  : Mount point must exist.
+# 3) Version                : 1.0
+# 3) Syntax                 : lin_fs_mount <device> <mount point>
+# 3) Optionals Parameters   : Nothing
+# 3) Mandatories Parameters : <device> and <mount point>
+# 3) Example 1              : lin_fs_mount /dev/cdrom /mnt
+# 3) Example 2              : lin_fs_mount nfsserver:/exported/path /mnt
+# 3) Return                 : -1=trying to mount on /, 0=fs mounted, 1=Device doesn't exist, 2=mount point doesn't exist or 3=No existing function for OS.
+function lin_fs_mount {
+	if [[ ! -e $1 ]]; then
+		return 1
+	fi
+	if [[ ! -d $2 ]]; then
+		return 2
+	fi
+	if [[ '/' = $2 ]]; then
+		return -1
+	fi
+	mount $1 $2
+	return $?
+}
+# lin_fs_mount end 

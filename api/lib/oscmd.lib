@@ -57,5 +57,32 @@ function chk_availablespace {
 }
 # chk_availablespace end
 
+# 3) Function               : fs_mount
+# 3) Purpose                : Mount a file system.
+# 3) Notes                  : Mount point must exist.
+# 3) Version                : 1.0
+# 3) Syntax                 : fs_mount <device> <mount point>
+# 3) Optionals Parameters   : Nothing
+# 3) Mandatories Parameters : <device> and <mount point>
+# 3) Example 1              : fs_mount /dev/cdrom /mnt
+# 3) Example 2              : fs_mount nfsserver:/exported/path /mnt
+# 3) Return                 : -1= trying to mount on /, 0=fs mounted, 1=Device doesn't exist, 2=mount point doesn't exist or 3=No existing function for OS.
+function fs_mount {
+	case ${API_OS} in
+		"aix")
+			aix_fs_mount "$*"
+			;;
+		"linux")
+			lin_fs_mount "$*"
+			;;
+		*)
+			echo "Error: Function fs_mount not existing for OS: ${API_OS}."
+			return 3
+			;;
+	esac
+	return $?
+}
+# fs_mount end
+
 # Include the current OS library
 load_custom_oslib
