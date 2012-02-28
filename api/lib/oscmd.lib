@@ -94,5 +94,51 @@ function ctl_service {
 }
 # ctl_service end
 
+# 3) Function               : fs_mount
+# 3) Purpose                : Mount a file system on a specified mount point.
+# 3) Version                : 1.1
+# 3) Syntax                 : fs_mount <device> <mount point>
+# 3) Notes                  : Need to be root.
+# 3) Optionals Parameters   : Nothing
+# 3) Mandatories Parameters : <device> (path to the device to mount) and <mount moint> (where to mount)
+# 3) Example 1              : fs_mount /dev/cdrom /mnt
+function fs_mount {
+	if [[ ! -e $1 ]]; then	# Check if device exists
+		return 1
+	fi
+	if [[ ! -d $2 ]]; then	# Check if mount point exists
+		return 2
+	fi
+	if [[ "/" = $2 ]]; then	# Do not try to mount in /
+		return 3
+	fi
+	
+	mount $1 $2 # Mount
+
+	return $?
+}
+# fs_mount end
+
+# 5) Function               : fs_umount
+# 5) Purpose                : Unmount a file system from a specified mount point.
+# 5) Version                : 1.1
+# 5) Syntax                 : fs_umount <mount point>
+# 5) Notes                  : Need to be root.
+# 5) Optionals Parameters   : Nothing
+# 5) Mandatories Parameters : <mount moint> (where to mount)
+# 5) Example 1              : fs_umount /mnt
+function fs_umount {
+	if [[ ! -d $1 ]]; then	# Check if mount point exists
+		return 2
+	fi
+	if [[ "/" = $1 ]]; then	# Do not try to unmount in /
+		return 3
+	fi
+	
+	umount $1 # Mount
+	return $?
+}
+# fs_umount end
+
 # Include the current OS library
 load_custom_oslib
