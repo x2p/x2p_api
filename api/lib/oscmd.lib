@@ -51,19 +51,8 @@ return $?
 # 2) History                :
 #  2012/02/22 (J. Alarcon) Initial version.
 function chk_availablespace {
-	case ${API_OS} in
-		"aix")
-			aix_chk_availablespace "$1" "$2"
-			;;
-		"linux")
-			lin_chk_availablespace "$1" "$2"
-			;;
-		*)
-			echo "Error, function chk_availablespace not existing for OS : ${API_OS}."
-			return 3
-			;;
-	esac
-	return $?
+	echo "Error, function chk_availablespace not existing for OS : ${API_OS}."
+	return 3
 }
 # chk_availablespace end
 
@@ -78,19 +67,8 @@ function chk_availablespace {
 # 4) History                :
 #  2012/02/27 (J. Alarcon) Initial version.
 function ctl_service {
-	case ${API_OS} in
-                "aix")
-                        echo "Error, aix_ctl_service doesn't exist."
-                        ;;
-                "linux")
-                        lin_ctl_service "$1" "$2"
-                        ;;
-                *)
-                        echo "Error, function ctl_service not existing for OS : ${API_OS}."
-                        return 3
-                        ;;
-        esac
-        return $?
+	echo "Error, function ctl_service not existing for OS : ${API_OS}."
+	return 3
 }
 # ctl_service end
 

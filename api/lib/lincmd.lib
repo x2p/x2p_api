@@ -1,28 +1,20 @@
 #!/bin/ksh 
-# Copyright 2012 XPRESS2PEOPLE
 # File                   : lincmd.lib
 # Created on             : 2012/02/23
 # Family                 : LIN
 # Purpose                : Custom functions for LINUX OS.
-# Developpers            :
-#   Benoit Garcia can be reached at <benoit.garcia@x2p.fr>
-#   Julien Alarcon can be reached at <julien.alarcon@x2p.fr>
-# History                :
-#  2012/02/23 (J. Alarcon) Initial version from aixinf.lib.
 
-# 1) Function               : lin_chk_availablespace
+# 1) Function               : chk_availablespace
 # 1) Purpose                : Verify that there is enough disk space in the specified directory.
 # 1) Notes                  : You must specify a size of space memory wanted either in MB or in %.
 # 1) Version                : 1.0
-# 1) Syntax                 : lin_chk_availablespace <directory> <memory space>
+# 1) Syntax                 : chk_availablespace <directory> <memory space>
 # 1) Optionals Parameters   : Nothing
 # 1) Mandatories Parameters : <directory> and <memory space in MB or in %>
-# 1) Example 1              : lin_chk_availablespace /home/oracle 100MB
-# 1) Example 2              : lin_chk_availablespace /etc 20%
+# 1) Example 1              : chk_availablespace /home/oracle 100MB
+# 1) Example 2              : chk_availablespace /etc 20%
 # 1) Return                 : 0=Sufficient space, 1=Miss space or 2=No unity expressed for the size of space memory wanted.
-# 1) History                :
-#  2012/02/23 (J. Alarcon) Initial version.
-function lin_chk_availablespace
+function chk_availablespace
 {
 	# Variables affectation
         dir=${1}
@@ -80,21 +72,21 @@ function lin_chk_availablespace
                 fi
         fi
 }
-# lin_chk_availablespace end
+# chk_availablespace end
 
-# 4) Function               : lin_ctl_service
+# 4) Function               : ctl_service
 # 4) Purpose                : Perform an action (start, stop, status) for a specific service.
 # 4) Version                : 1.0
-# 4) Syntax                 : lin_ctl_service <service> <action>
+# 4) Syntax                 : ctl_service <service> <action>
 # 4) Notes		    : Need to be root.
 # 4) Optionals Parameters   : Nothing
 # 4) Mandatories Parameters : <service> (name of the service) and <action> [stop|start|status]
-# 4) Example 1              : lin_ctl_service sshd status
+# 4) Example 1              : ctl_service sshd status
 # 4) History                :
 #  2012/02/27 (J. Alarcon) Initial version.
-function lin_ctl_service {
+function ctl_service {
 	/etc/init.d/${1} ${2}
 
         return $?
 }
-# lin_ctl_service end
+# ctl_service end
