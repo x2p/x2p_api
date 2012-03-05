@@ -261,7 +261,7 @@ run_ora_rmanscript() {
       # run the script, with recovery catalog connection if needed.
  	if [ "${USE_RMAN_CATALOG}" == "YES" ] ; then
         ${ORACLE_HOME}/bin/rman TARGET /<<EOS
-@${APIHOME}/conf/connect_catalog.rman
+@${HOME}/.api/connect_catalog.conf
 RESYNC CATALOG;
 @$rman_script
 EOS
