@@ -118,5 +118,21 @@ function fs_umount {
 }
 # fs_umount end
 
+# 6) Function               : kernel_mgmt 
+# 6) Purpose                : Show or set a kernel setting.
+# 6) Version                : 1.0
+# 6) Syntax                 : kernel_mgmt <setting> [new_value] 
+# 6) Notes                  : Need to be root.
+# 6) Optionals Parameters   : [new_value] (the new value to set)
+# 6) Mandatories Parameters : <setting> (name of the setting to set or show)
+# 6) Example 1              : kernel_mgmt "crypto.fips_enabled" "1" (Set crypto.fips_enabled to value 1)
+# 6) Example 2		    : kernel_mgmt "crypto.fips_enabled" (Show actual value of crypto.fips_enabled setting)
+# 6) Example 3		    : kernel_mgmt "all" (Show all the kernel settings)
+function kernel_mgmt {
+        echo "Error, function kernel_mgmt not existing for OS : ${API_OS}."
+        return 3
+}
+# kernel_mgmt end
+
 # Include the current OS library
 load_custom_oslib
